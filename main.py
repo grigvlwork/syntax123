@@ -91,6 +91,8 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.insert_answer_btn.clicked.connect(self.insert)
 
 
+
+
     def change_theme(self):
         if self.toggle_theme_btn.text() == 'Светлая тема':
             self.toggle_theme_btn.setText('Тёмная тема')
