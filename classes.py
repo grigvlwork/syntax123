@@ -16,7 +16,7 @@ class Task:
         while f'<code{i}>' in text:
             begin = text.find(f'<code{i}>') + len(f'<code{i}>')
             end = text.find(f'</code{i}>')
-            code = text[begin:end]
+            code = text[begin:end].split('```\n')[1]
             if f'<explanation{i}>' in text:
                 begin = text.find(f'<explanation{i}>') + len(f'<explanation{i}>')
                 end = text.find(f'</explanation{i}>')
@@ -33,7 +33,7 @@ class Task:
     def get_text(self):
         text = ''
         for i in range(len(self.tasks)):
-            text += f'<code{i + 1}>\n{self.tasks[i].code}\n</code{i + 1}>' + \
+            text += f'<code{i + 1}>\n```\n{self.tasks[i].code}\n```\n</code{i + 1}>' + \
                     f'\n<explanation{i + 1}>\n{self.tasks[i].explanation}\n</explanation{i + 1}>\n'
         text += f'<comment>\n{self.comment}\n</comment>'
         return text
