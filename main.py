@@ -73,6 +73,19 @@ def spell_check(text):
     return result
 
 
+def check_dict():
+    file1 = '/_venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/ru_RU.aff'
+    file2 = '/_venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/ru_RU.dic'
+    file_path1 = os.getcwd() + '/venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/ru_RU.aff'
+    file_path2 = os.getcwd() + '/venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/ru_RU.dic'
+    file_path = os.getcwd() + '/venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/'
+    if (not os.path.exists(file_path1)) or (not os.path.exists(file_path2)):
+        for file in glob.glob(os.getcwd() + file1):
+            shutil.copy(file, file_path)
+        for file in glob.glob(os.getcwd() + file2):
+            shutil.copy(file, file_path)
+
+
 class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -83,6 +96,8 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.task5_btn, self.task6_btn, self.task7_btn, self.task8_btn,
             self.task9_btn, self.task10_btn
         ]
+        for button in self.part_buttons:
+            button.clicked.connect(self.part_button_click)
         self.amount_buttons = 10
         self.task = Task()
         self.clear_controls()
@@ -90,8 +105,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.corrected_cb.clicked.connect(self.mark_part_checked)
         self.insert_answer_btn.clicked.connect(self.insert)
 
-
-
+        check_dict()
 
     def change_theme(self):
         if self.toggle_theme_btn.text() == 'Светлая тема':
@@ -112,6 +126,11 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
     def mark_part_checked(self):
         self.change_icon(self.current_part, self.corrected_cb.isChecked())
+        self.task.tasks[self.current_part - 1].checked = self.corrected_cb.isChecked()
+        if self.task.is_ready():
+            self.copy_answer_btn.setEnabled(True)
+        else:
+            self.copy_answer_btn.setEnabled(False)
 
     def clear_controls(self):
         icon = QtGui.QIcon()
@@ -121,8 +140,14 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             if i > 0:
                 self.part_buttons[i].setVisible(False)
 
+    def set_controls(self):
+        for i in range(len(self.task.tasks)):
+            self.part_buttons[i].setVisible(True)
+            self.part_buttons[i].setEnabled(True)
+
     def insert(self):
         s = pyperclip.paste()
+        self.current_part = 1
         self.teacher_answer_pte.setPlainText(s)
         self.processing()
 
@@ -135,13 +160,21 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.correct_code_pte.appendPlainText(self.task.tasks[0].code)
         self.my_answer_pte.clear()
         self.my_answer_pte.appendPlainText(self.task.get_text())
-        # self.create_my_answer()
+        self.set_controls()
+        # self.create_my_answer
 
+    def load_task(self, task_id):
+        self.explanation_pte.clear()
+        self.explanation_pte.appendPlainText(self.task.tasks[task_id].explanation)
+        self.correct_code_pte.clear()
+        self.correct_code_pte.appendPlainText(self.task.tasks[task_id].code)
+        self.corrected_cb.setChecked(self.task.tasks[task_id].checked)
 
-
-
-
-
+    def part_button_click(self):
+        t = self.sender().text()
+        task_id = int(t) - 1
+        self.load_task(task_id)
+        self.current_part = int(t)
 
 
 def excepthook(exc_type, exc_value, exc_tb):
