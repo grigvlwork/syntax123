@@ -1,6 +1,5 @@
 class Part:
-    def __init__(self, number=0, code='', explanation=''):
-        self.number = number
+    def __init__(self, code='', explanation=''):
         self.code = code
         self.explanation = explanation
         self.checked = False
@@ -23,7 +22,7 @@ class Task:
                 explanation = text[begin:end]
             else:
                 explanation = ''
-            self.tasks.append(Part(i, code, explanation))
+            self.tasks.append(Part(code, explanation))
             i += 1
         if '<comment>' in text:
             begin = text.find('<comment>') + len('<comment>')
@@ -33,14 +32,20 @@ class Task:
     def get_text(self):
         text = ''
         for i in range(len(self.tasks)):
-            text += f'<code{i + 1}>\n```\n{self.tasks[i].code}\n```\n</code{i + 1}>' + \
+            text += f'<code{i + 1}>\n\n```\n{self.tasks[i].code}\n```\n\n</code{i + 1}>' + \
                     f'\n<explanation{i + 1}>\n{self.tasks[i].explanation}\n</explanation{i + 1}>\n'
         text += f'<comment>\n{self.comment}\n</comment>'
         return text
+
+    def del_part(self, part_id):
+        if part_id < len(self.tasks):
+            self.tasks.pop(part_id)
+
+    def add_part(self):
+        self.tasks.append(Task())
 
     def is_ready(self):
         for t in self.tasks:
             if not t.checked:
                 return False
         return True
-

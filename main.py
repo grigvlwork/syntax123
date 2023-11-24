@@ -125,12 +125,23 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         button_to_change.setIcon(icon)
 
     def mark_part_checked(self):
+        errors = spell_check(self.explanation_pte.toPlainText())
+        if len(errors) > 0:
+            s = 'Обнаружены ошибки в тексте, всё равно пометить как корректный?\n'
+            for err in errors:
+                s += err[0] + ':    ' + err[1] + '\n'
+            message = QMessageBox.question(self, "Орфографические ошибки", s,
+                                           QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if message != QMessageBox.Yes:
+                self.corrected_cb.setChecked(False)
+                return
         self.change_icon(self.current_part, self.corrected_cb.isChecked())
         self.task.tasks[self.current_part - 1].checked = self.corrected_cb.isChecked()
         if self.task.is_ready():
             self.copy_answer_btn.setEnabled(True)
         else:
             self.copy_answer_btn.setEnabled(False)
+
 
     def clear_controls(self):
         icon = QtGui.QIcon()

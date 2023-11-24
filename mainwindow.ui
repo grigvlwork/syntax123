@@ -637,6 +637,18 @@
                 </property>
                </widget>
               </item>
+              <item>
+               <widget class="QPushButton" name="add_part_btn">
+                <property name="font">
+                 <font>
+                  <pointsize>11</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Добавить пункт</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </item>
             <item>
