@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="img">
+    <file>check_green.svg</file>
     <file>check_fill.svg</file>
     <file>check.svg</file>
   </qresource>
