@@ -116,6 +116,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.clear_btn.clicked.connect(self.clear_task)
         self.pep8_btn.clicked.connect(self.pep8_correct)
         self.del_part_btn.clicked.connect(self.del_part)
+        self.copy_answer_btn.clicked.connect(self.copy_my_answer)
         self.allow_spell_check = check_dict()
 
     def change_theme(self):
@@ -294,6 +295,9 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.set_controls()
         self.current_part = len(self.task.tasks)
         self.load_task(self.current_part - 1)
+
+    def copy_my_answer(self):
+        pyperclip.copy(self.my_answer_pte.toPlainText())
 
 
 def excepthook(exc_type, exc_value, exc_tb):
