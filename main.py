@@ -85,6 +85,21 @@ def check_dict():
         for file in glob.glob(os.getcwd() + file2):
             shutil.copy(file, file_path)
 
+def check_dict(self):
+    file1 = '/_venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/ru_RU.aff'
+    file2 = '/_venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/ru_RU.dic'
+    file_path1 = os.getcwd() + '/venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/ru_RU.aff'
+    file_path2 = os.getcwd() + '/venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/ru_RU.dic'
+    file_path = os.getcwd() + '/venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/'
+    try:
+        if (not os.path.exists(file_path1)) or (not os.path.exists(file_path2)):
+            for file in glob.glob(os.getcwd() + file1):
+                shutil.copy(file, file_path)
+            for file in glob.glob(os.getcwd() + file2):
+                shutil.copy(file, file_path)
+        return True
+    except Exception:
+        return False
 
 class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -104,8 +119,8 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.toggle_theme_btn.clicked.connect(self.change_theme)
         self.corrected_cb.clicked.connect(self.mark_part_checked)
         self.insert_answer_btn.clicked.connect(self.insert)
+        self.allow_spell_check = check_dict()
 
-        check_dict()
 
     def change_theme(self):
         if self.toggle_theme_btn.text() == 'Светлая тема':
@@ -126,7 +141,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
     def mark_part_checked(self):
         errors = spell_check(self.explanation_pte.toPlainText())
-        if len(errors) > 0:
+        if len(errors) > 0 and self.allow_spell_check:
             s = 'Обнаружены ошибки в тексте, всё равно пометить как корректный?\n'
             for err in errors:
                 s += err[0] + ':    ' + err[1] + '\n'
@@ -141,7 +156,6 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.copy_answer_btn.setEnabled(True)
         else:
             self.copy_answer_btn.setEnabled(False)
-
 
     def clear_controls(self):
         icon = QtGui.QIcon()
@@ -186,6 +200,41 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         task_id = int(t) - 1
         self.load_task(task_id)
         self.current_part = int(t)
+
+    def run_correct(self):
+        if self.use_file_cb.isChecked():
+            if (self.part_cb.currentText() == 'beta' or
+                    self.number_cb.currentText() in ['17', '22', '24']):
+                folder = '/files/beta/'
+            else:
+                folder = '/files/' + self.part_cb.currentText() + '/'
+            file_name = self.number_cb.currentText() + '.*'
+            for file in glob.glob(os.getcwd() + folder + file_name):
+                shutil.copy(file, os.getcwd())
+        elif not self.use_file_cb.isChecked() and \
+                ('.txt' in self.correct_code_pte.toPlainText() or
+                 '.csv' in self.correct_code_pte.toPlainText()):
+            need_file_frm = Need_file_dlg()
+            need_file_frm.exec()
+            if need_file_frm.accepted:
+                if (need_file_frm.part_cb.currentText() == 'beta' or
+                        need_file_frm.number_cb.currentText() in ['17', '22', '24']):
+                    folder = '/files/beta/'
+                else:
+                    folder = '/files/' + need_file_frm.part_cb.currentText() + '/'
+                file_name = need_file_frm.number_cb.currentText() + '.*'
+                for file in glob.glob(os.getcwd() + folder + file_name):
+                    shutil.copy(file, os.getcwd())
+                self.use_file_cb.setChecked(True)
+                self.part_cb.setVisible(True)
+                self.part_cb.setCurrentText(need_file_frm.part_cb.currentText())
+                self.number_cb.setVisible(True)
+                self.number_cb.setCurrentText(need_file_frm.number_cb.currentText())
+            else:
+                return
+        code = self.correct_code_pte.toPlainText()
+        timeout = self.timeout_sb.value()
+        self.correct_output_lb.setText('Вывод: ' + run_text(remove_comments(code), timeout))
 
 
 def excepthook(exc_type, exc_value, exc_tb):
