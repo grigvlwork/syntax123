@@ -202,35 +202,17 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.current_part = int(t)
 
     def run_correct(self):
-        if self.use_file_cb.isChecked():
-            if (self.part_cb.currentText() == 'beta' or
-                    self.number_cb.currentText() in ['17', '22', '24']):
-                folder = '/files/beta/'
-            else:
-                folder = '/files/' + self.part_cb.currentText() + '/'
-            file_name = self.number_cb.currentText() + '.*'
-            for file in glob.glob(os.getcwd() + folder + file_name):
+        file_names = ['9.txt']
+        code = self.correct_code_pte.toPlainText()
+
+        if (self.part_cb.currentText() == 'beta' or
+                self.number_cb.currentText() in ['17', '22', '24']):
+            folder = '/files/beta/'
+        else:
+            folder = '/files/' + self.part_cb.currentText() + '/'
+        file_name = self.number_cb.currentText() + '.*'
+        for file in glob.glob(os.getcwd() + folder + file_name):
                 shutil.copy(file, os.getcwd())
-        elif not self.use_file_cb.isChecked() and \
-                ('.txt' in self.correct_code_pte.toPlainText() or
-                 '.csv' in self.correct_code_pte.toPlainText()):
-            need_file_frm = Need_file_dlg()
-            need_file_frm.exec()
-            if need_file_frm.accepted:
-                if (need_file_frm.part_cb.currentText() == 'beta' or
-                        need_file_frm.number_cb.currentText() in ['17', '22', '24']):
-                    folder = '/files/beta/'
-                else:
-                    folder = '/files/' + need_file_frm.part_cb.currentText() + '/'
-                file_name = need_file_frm.number_cb.currentText() + '.*'
-                for file in glob.glob(os.getcwd() + folder + file_name):
-                    shutil.copy(file, os.getcwd())
-                self.use_file_cb.setChecked(True)
-                self.part_cb.setVisible(True)
-                self.part_cb.setCurrentText(need_file_frm.part_cb.currentText())
-                self.number_cb.setVisible(True)
-                self.number_cb.setCurrentText(need_file_frm.number_cb.currentText())
-            else:
                 return
         code = self.correct_code_pte.toPlainText()
         timeout = self.timeout_sb.value()
