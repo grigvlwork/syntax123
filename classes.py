@@ -42,7 +42,7 @@ class Task:
             self.tasks.pop(part_id)
 
     def add_part(self):
-        self.tasks.append(Task())
+        self.tasks.append(Part())
 
     def is_ready(self):
         for t in self.tasks:

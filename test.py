@@ -1,3 +1,2 @@
-import shutil
-
-print(shutil.which("python3"))
+with open('9.txt') as f:
+    print(f.readlines()[0])

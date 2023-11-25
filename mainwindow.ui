@@ -30,6 +30,18 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="clear_btn">
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Очистить</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="toggle_theme_btn">
         <property name="font">
          <font>
@@ -511,6 +523,26 @@
                 </property>
                 <property name="text">
                  <string>Run</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_4">
+                <property name="text">
+                 <string>timeout</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QSpinBox" name="timeout_sb">
+                <property name="minimum">
+                 <number>10</number>
+                </property>
+                <property name="maximum">
+                 <number>250</number>
+                </property>
+                <property name="singleStep">
+                 <number>40</number>
                 </property>
                </widget>
               </item>

@@ -79,18 +79,6 @@ def check_dict():
     file_path1 = os.getcwd() + '/venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/ru_RU.aff'
     file_path2 = os.getcwd() + '/venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/ru_RU.dic'
     file_path = os.getcwd() + '/venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/'
-    if (not os.path.exists(file_path1)) or (not os.path.exists(file_path2)):
-        for file in glob.glob(os.getcwd() + file1):
-            shutil.copy(file, file_path)
-        for file in glob.glob(os.getcwd() + file2):
-            shutil.copy(file, file_path)
-
-def check_dict(self):
-    file1 = '/_venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/ru_RU.aff'
-    file2 = '/_venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/ru_RU.dic'
-    file_path1 = os.getcwd() + '/venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/ru_RU.aff'
-    file_path2 = os.getcwd() + '/venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/ru_RU.dic'
-    file_path = os.getcwd() + '/venv/Lib/site-packages/enchant/data/mingw64/share/enchant/hunspell/'
     try:
         if (not os.path.exists(file_path1)) or (not os.path.exists(file_path2)):
             for file in glob.glob(os.getcwd() + file1):
@@ -101,11 +89,12 @@ def check_dict(self):
     except Exception:
         return False
 
+
 class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.current_part = 1
+        self.current_part = None
         self.part_buttons = [
             self.task1_btn, self.task2_btn, self.task3_btn, self.task4_btn,
             self.task5_btn, self.task6_btn, self.task7_btn, self.task8_btn,
@@ -115,12 +104,18 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             button.clicked.connect(self.part_button_click)
         self.amount_buttons = 10
         self.task = Task()
+        self.correct_code_model = QStandardItemModel()
+        self.explanation_pte.textChanged.connect(self.explanation_changed)
+        self.correct_code_pte.textChanged.connect(self.code_changed)
         self.clear_controls()
         self.toggle_theme_btn.clicked.connect(self.change_theme)
         self.corrected_cb.clicked.connect(self.mark_part_checked)
         self.insert_answer_btn.clicked.connect(self.insert)
+        self.add_part_btn.clicked.connect(self.add_part)
+        self.run_btn.clicked.connect(self.run_correct)
+        self.clear_btn.clicked.connect(self.clear_task)
+        self.pep8_btn.clicked.connect(self.pep8_correct)
         self.allow_spell_check = check_dict()
-
 
     def change_theme(self):
         if self.toggle_theme_btn.text() == 'Светлая тема':
@@ -164,6 +159,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.change_icon(i, False)
             if i > 0:
                 self.part_buttons[i].setVisible(False)
+        self.correct_code_pte.clear()
+        self.explanation_pte.clear()
+        self.my_answer_pte.clear()
+        self.teacher_answer_pte.clear()
 
     def set_controls(self):
         for i in range(len(self.task.tasks)):
@@ -189,34 +188,96 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         # self.create_my_answer
 
     def load_task(self, task_id):
+        code = self.task.tasks[task_id].code
+        explanation = self.task.tasks[task_id].explanation
+        checked = self.task.tasks[task_id].checked
         self.explanation_pte.clear()
-        self.explanation_pte.appendPlainText(self.task.tasks[task_id].explanation)
         self.correct_code_pte.clear()
+        self.task.tasks[task_id].code = code
+        self.task.tasks[task_id].explanation = explanation
+        self.task.tasks[task_id].checked = checked
+        self.explanation_pte.appendPlainText(self.task.tasks[task_id].explanation)
         self.correct_code_pte.appendPlainText(self.task.tasks[task_id].code)
         self.corrected_cb.setChecked(self.task.tasks[task_id].checked)
 
+
     def part_button_click(self):
         t = self.sender().text()
+        print(t)
         task_id = int(t) - 1
-        self.load_task(task_id)
         self.current_part = int(t)
+        self.load_task(task_id)
+
+    def clear_task(self):
+        self.task = Task()
+        self.current_part = None
+        self.clear_controls()
 
     def run_correct(self):
-        file_names = ['9.txt']
+        file_names = ['9.txt', '9.csv', '17.txt', '22.txt', '24.txt', '26.txt', '27_A.txt', '27_B.txt']
         code = self.correct_code_pte.toPlainText()
-
+        file_name = self.number_cb.currentText() + '.*'
+        for file in file_names:
+            if file in code:
+                file_name = file
+                break
         if (self.part_cb.currentText() == 'beta' or
                 self.number_cb.currentText() in ['17', '22', '24']):
             folder = '/files/beta/'
         else:
             folder = '/files/' + self.part_cb.currentText() + '/'
-        file_name = self.number_cb.currentText() + '.*'
-        for file in glob.glob(os.getcwd() + folder + file_name):
+        try:
+            for file in glob.glob(os.getcwd() + folder + file_name):
                 shutil.copy(file, os.getcwd())
-                return
+        except Exception:
+            self.correct_output_lb.setText('Файл не найден')
+            return
         code = self.correct_code_pte.toPlainText()
         timeout = self.timeout_sb.value()
         self.correct_output_lb.setText('Вывод: ' + run_text(remove_comments(code), timeout))
+
+    def explanation_changed(self):
+        if len(self.task.tasks) > 0 and self.current_part is not None:
+            self.task.tasks[self.current_part - 1].explanation = self.explanation_pte.toPlainText()
+        else:
+            self.task.add_part()
+            self.current_part = 1
+            self.task.tasks[self.current_part - 1].explanation = self.explanation_pte.toPlainText()
+        self.my_answer_pte.clear()
+        self.my_answer_pte.appendPlainText(self.task.get_text())
+
+    def code_changed(self):
+        if len(self.task.tasks) > 0 and self.current_part is not None:
+            self.task.tasks[self.current_part - 1].code = self.correct_code_pte.toPlainText()
+        else:
+            self.task.add_part()
+            self.current_part = 1
+            self.task.tasks[self.current_part - 1].code = self.correct_code_pte.toPlainText()
+        self.my_answer_pte.clear()
+        self.my_answer_pte.appendPlainText(self.task.get_text())
+
+    def add_part(self):
+        self.task.add_part()
+        self.current_part = len(self.task.tasks)
+        self.part_buttons[self.current_part - 1].setVisible(True)
+        self.part_buttons[self.current_part - 1].setEnabled(True)
+        self.correct_code_pte.clear()
+        self.explanation_pte.clear()
+
+    def pep8_correct(self):
+        self.correct_code_pte.setPlainText(self.correct_code_pte.toPlainText().replace('\t', '    '))
+        code = self.correct_code_pte.toPlainText()
+        try:
+            code = black.format_str(code, mode=black.Mode(
+                target_versions={black.TargetVersion.PY310},
+                line_length=101,
+                string_normalization=False,
+                is_pyi=False,
+            ), )
+        except Exception as err:
+            code = code.strip()
+        self.correct_code_pte.setPlainText(code)
+        self.correct_code = code
 
 
 def excepthook(exc_type, exc_value, exc_tb):
