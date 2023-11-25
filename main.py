@@ -115,6 +115,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.run_btn.clicked.connect(self.run_correct)
         self.clear_btn.clicked.connect(self.clear_task)
         self.pep8_btn.clicked.connect(self.pep8_correct)
+        self.del_part_btn.clicked.connect(self.del_part)
         self.allow_spell_check = check_dict()
 
     def change_theme(self):
@@ -165,9 +166,15 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.teacher_answer_pte.clear()
 
     def set_controls(self):
-        for i in range(len(self.task.tasks)):
-            self.part_buttons[i].setVisible(True)
-            self.part_buttons[i].setEnabled(True)
+        for i in range(10):
+            if i in range(len(self.task.tasks)):
+                self.part_buttons[i].setVisible(True)
+                self.part_buttons[i].setEnabled(True)
+                self.change_icon(i, self.task.tasks[i].checked)
+            else:
+                self.part_buttons[i].setVisible(False)
+                self.part_buttons[i].setEnabled(False)
+                self.change_icon(i, False)
 
     def insert(self):
         s = pyperclip.paste()
@@ -203,7 +210,6 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
     def part_button_click(self):
         t = self.sender().text()
-        print(t)
         task_id = int(t) - 1
         self.current_part = int(t)
         self.load_task(task_id)
@@ -278,6 +284,16 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             code = code.strip()
         self.correct_code_pte.setPlainText(code)
         self.correct_code = code
+
+    def del_part(self):
+        self.task.del_part(self.current_part - 1)
+        text = self.task.get_text()
+        self.clear_controls()
+        self.task = Task()
+        self.task.parse(text)
+        self.set_controls()
+        self.current_part = len(self.task.tasks)
+        self.load_task(self.current_part - 1)
 
 
 def excepthook(exc_type, exc_value, exc_tb):
