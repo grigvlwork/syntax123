@@ -11,6 +11,7 @@ class Task:
         self.comment = ''
 
     def parse(self, text):
+        # self.__init__()
         i = 1
         while f'<code{i}>' in text:
             begin = text.find(f'<code{i}>') + len(f'<code{i}>')

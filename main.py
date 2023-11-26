@@ -185,12 +185,13 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
     def processing(self):
         t = self.teacher_answer_pte.toPlainText()
-        self.task.parse(t)
         self.explanation_pte.clear()
-        self.explanation_pte.appendPlainText(self.task.tasks[0].explanation)
         self.correct_code_pte.clear()
-        self.correct_code_pte.appendPlainText(self.task.tasks[0].code)
         self.my_answer_pte.clear()
+        self.task = Task()
+        self.task.parse(t)
+        self.explanation_pte.appendPlainText(self.task.tasks[0].explanation)
+        self.correct_code_pte.appendPlainText(self.task.tasks[0].code)
         self.my_answer_pte.appendPlainText(self.task.get_text())
         self.set_controls()
         # self.create_my_answer
@@ -288,13 +289,8 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
     def del_part(self):
         self.task.del_part(self.current_part - 1)
-        text = self.task.get_text()
-        self.clear_controls()
-        self.task = Task()
-        self.task.parse(text)
-        self.set_controls()
-        self.current_part = len(self.task.tasks)
-        self.load_task(self.current_part - 1)
+        pyperclip.copy(self.task.get_text())
+        self.insert()
 
     def copy_my_answer(self):
         pyperclip.copy(self.my_answer_pte.toPlainText())

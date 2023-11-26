@@ -2,7 +2,13 @@
 
 ```
 
-Последний код из задания с исправленной ошибкой по комментарию тренера.
+count = 0
+with open("9.txt") as file:
+    for row in file:
+        a, b, c = map(int, row.split())
+        if a != b != c and (a+b+c)%3==0:
+            count += 1
+print(count)
 
 ```
 </code1>
