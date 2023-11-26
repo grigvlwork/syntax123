@@ -119,6 +119,8 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.pep8_test_btn.clicked.connect(self.pep8_test)
         self.del_part_btn.clicked.connect(self.del_part)
         self.copy_answer_btn.clicked.connect(self.copy_my_answer)
+        self.copy_to_test_btn.clicked.connect(self.copy_to_test)
+        self.correct_tw.currentChanged.connect(self.correct_row_generator)
         self.allow_spell_check = check_dict()
 
     def change_theme(self):
@@ -333,6 +335,21 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
     def copy_my_answer(self):
         pyperclip.copy(self.my_answer_pte.toPlainText())
+
+    def copy_to_test(self):
+        self.test_pte.clear()
+        self.test_pte.appendPlainText(self.correct_code_pte.toPlainText())
+
+    def correct_row_generator(self):
+        if self.correct_tw.currentIndex() == 1:
+            self.correct_code_model.clear()
+            for row in self.correct_code_pte.toPlainText().split('\n'):
+                it = QStandardItem(row)
+                self.correct_code_model.appendRow(it)
+            self.correct_code_tv.setModel(self.correct_code_model)
+            self.correct_code_tv.horizontalHeader().setVisible(False)
+            self.correct_code_tv.resizeColumnToContents(0)
+
 
 
 def excepthook(exc_type, exc_value, exc_tb):

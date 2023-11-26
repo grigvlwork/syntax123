@@ -527,6 +527,18 @@
                </widget>
               </item>
               <item>
+               <widget class="QPushButton" name="copy_to_test_btn">
+                <property name="font">
+                 <font>
+                  <pointsize>11</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Копировать в тест</string>
+                </property>
+               </widget>
+              </item>
+              <item>
                <widget class="QLabel" name="label_4">
                 <property name="text">
                  <string>timeout</string>
