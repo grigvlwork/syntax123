@@ -113,8 +113,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.insert_answer_btn.clicked.connect(self.insert)
         self.add_part_btn.clicked.connect(self.add_part)
         self.run_btn.clicked.connect(self.run_correct)
+        self.run_test_btn.clicked.connect(self.run_test)
         self.clear_btn.clicked.connect(self.clear_task)
         self.pep8_btn.clicked.connect(self.pep8_correct)
+        self.pep8_test_btn.clicked.connect(self.pep8_test)
         self.del_part_btn.clicked.connect(self.del_part)
         self.copy_answer_btn.clicked.connect(self.copy_my_answer)
         self.allow_spell_check = check_dict()
@@ -210,7 +212,6 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.correct_code_pte.appendPlainText(self.task.tasks[task_id].code)
         self.corrected_cb.setChecked(self.task.tasks[task_id].checked)
 
-
     def part_button_click(self):
         t = self.sender().text()
         task_id = int(t) - 1
@@ -244,6 +245,29 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         code = self.correct_code_pte.toPlainText()
         timeout = self.timeout_sb.value()
         self.correct_output_lb.setText('Вывод: ' + run_text(remove_comments(code), timeout))
+
+    def run_test(self):
+        file_names = ['9.txt', '9.csv', '17.txt', '22.txt', '24.txt', '26.txt', '27_A.txt', '27_B.txt']
+        code = self.test_pte.toPlainText()
+        file_name = self.number_cb.currentText() + '.*'
+        for file in file_names:
+            if file in code:
+                file_name = file
+                break
+        if (self.part_cb.currentText() == 'beta' or
+                self.number_cb.currentText() in ['17', '22', '24']):
+            folder = '/files/beta/'
+        else:
+            folder = '/files/' + self.part_cb.currentText() + '/'
+        try:
+            for file in glob.glob(os.getcwd() + folder + file_name):
+                shutil.copy(file, os.getcwd())
+        except Exception:
+            self.output_test_lb.setText('Файл не найден')
+            return
+        code = self.test_pte.toPlainText()
+        timeout = self.timeout_test_sb.value()
+        self.output_test_lb.setText('Вывод: ' + run_text(remove_comments(code), timeout))
 
     def explanation_changed(self):
         if len(self.task.tasks) > 0 and self.current_part is not None:
@@ -287,6 +311,20 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             code = code.strip()
         self.correct_code_pte.setPlainText(code)
         self.correct_code = code
+
+    def pep8_test(self):
+        self.test_pte.setPlainText(self.test_pte.toPlainText().replace('\t', '    '))
+        code = self.test_pte.toPlainText()
+        try:
+            code = black.format_str(code, mode=black.Mode(
+                target_versions={black.TargetVersion.PY310},
+                line_length=101,
+                string_normalization=False,
+                is_pyi=False,
+            ), )
+        except Exception as err:
+            code = code.strip()
+        self.test_pte.setPlainText(code)
 
     def del_part(self):
         self.task.del_part(self.current_part - 1)
