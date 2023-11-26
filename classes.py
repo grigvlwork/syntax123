@@ -33,9 +33,9 @@ class Task:
     def get_text(self):
         text = ''
         for i in range(len(self.tasks)):
-            text += f'<code{i + 1}>\n\n```\n{self.tasks[i].code}\n```\n\n</code{i + 1}>' + \
-                    f'\n<explanation{i + 1}>\n{self.tasks[i].explanation}\n</explanation{i + 1}>\n'
-        text += f'<comment>\n{self.comment}\n</comment>'
+            text += f'<code{i + 1}>\n\n```\n{self.tasks[i].code.strip()}\n```\n\n</code{i + 1}>' + \
+                    f'\n<explanation{i + 1}>\n\n{self.tasks[i].explanation.strip()}\n\n</explanation{i + 1}>\n'
+        text += f'<comment>\n\n{self.comment}\n\n</comment>'
         return text
 
     def del_part(self, part_id):
