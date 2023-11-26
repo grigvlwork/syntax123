@@ -742,6 +742,18 @@
                  </widget>
                 </item>
                 <item>
+                 <widget class="QLabel" name="label_3">
+                  <property name="font">
+                   <font>
+                    <pointsize>11</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Тестирование программ</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <spacer name="horizontalSpacer_5">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
@@ -757,7 +769,14 @@
                </layout>
               </item>
               <item>
-               <widget class="QPlainTextEdit" name="test_pte"/>
+               <widget class="QPlainTextEdit" name="test_pte">
+                <property name="font">
+                 <font>
+                  <family>Consolas</family>
+                  <pointsize>11</pointsize>
+                 </font>
+                </property>
+               </widget>
               </item>
               <item>
                <widget class="QLabel" name="output_test_lb">
