@@ -165,6 +165,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.explanation_pte.clear()
         self.my_answer_pte.clear()
         self.teacher_answer_pte.clear()
+        self.corrected_cb.isChecked(False)
 
     def set_controls(self):
         for i in range(10):
