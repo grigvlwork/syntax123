@@ -329,9 +329,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.test_pte.setPlainText(code)
 
     def del_part(self):
-        self.task.del_part(self.current_part - 1)
-        pyperclip.copy(self.task.get_text())
-        self.insert()
+        if len(self.task.tasks) > 1:
+            self.task.del_part(self.current_part - 1)
+            pyperclip.copy(self.task.get_text())
+            self.insert()
 
     def copy_my_answer(self):
         pyperclip.copy(self.my_answer_pte.toPlainText())
@@ -349,7 +350,6 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.correct_code_tv.setModel(self.correct_code_model)
             self.correct_code_tv.horizontalHeader().setVisible(False)
             self.correct_code_tv.resizeColumnToContents(0)
-
 
 
 def excepthook(exc_type, exc_value, exc_tb):
