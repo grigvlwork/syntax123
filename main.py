@@ -362,7 +362,6 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             return
         for button in self.part_buttons:
             if button.text() == str(self.current_part):
-                print(1)
                 button.setStyleSheet('QPushButton {background-color: #A3C1DA}')
             else:
                 button.setStyleSheet('QPushButton {background-color: #54687A}')
