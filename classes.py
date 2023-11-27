@@ -16,11 +16,11 @@ class Task:
         while f'<code{i}>' in text:
             begin = text.find(f'<code{i}>') + len(f'<code{i}>')
             end = text.find(f'</code{i}>')
-            code = text[begin:end].split('```\n')[1]
+            code = text[begin:end].split('```\n')[1].strip()
             if f'<explanation{i}>' in text:
                 begin = text.find(f'<explanation{i}>') + len(f'<explanation{i}>')
                 end = text.find(f'</explanation{i}>')
-                explanation = text[begin:end]
+                explanation = text[begin:end].strip()
             else:
                 explanation = ''
             self.tasks.append(Part(code, explanation))
@@ -28,7 +28,7 @@ class Task:
         if '<comment>' in text:
             begin = text.find('<comment>') + len('<comment>')
             end = text.find('</comment>')
-            self.comment = text[begin:end]
+            self.comment = text[begin:end].strip()
 
     def get_text(self):
         text = ''
