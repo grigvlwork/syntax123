@@ -658,18 +658,6 @@
                </spacer>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton">
-                <property name="font">
-                 <font>
-                  <pointsize>11</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Загрузить</string>
-                </property>
-               </widget>
-              </item>
-              <item>
                <widget class="QPushButton" name="del_part_btn">
                 <property name="font">
                  <font>
