@@ -734,6 +734,18 @@
                  </widget>
                 </item>
                 <item>
+                 <widget class="QPushButton" name="paste_test_btn">
+                  <property name="font">
+                   <font>
+                    <pointsize>11</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>Вставить</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
                  <widget class="QLabel" name="label_5">
                   <property name="text">
                    <string>timeout</string>

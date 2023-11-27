@@ -121,6 +121,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.copy_answer_btn.clicked.connect(self.copy_my_answer)
         self.copy_to_test_btn.clicked.connect(self.copy_to_test)
         self.correct_tw.currentChanged.connect(self.correct_row_generator)
+        self.paste_test_btn.clicked.connect(self.paste_test)
         self.allow_spell_check = check_dict()
 
     def change_theme(self):
@@ -195,6 +196,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.explanation_pte.clear()
         self.correct_code_pte.clear()
         self.my_answer_pte.clear()
+        self.corrected_cb.setChecked(False)
         self.task = Task()
         self.task.parse(t)
         self.explanation_pte.appendPlainText(self.task.tasks[0].explanation)
@@ -363,6 +365,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
                 button.setStyleSheet('QPushButton {background-color: #A3C1DA}')
             else:
                 button.setStyleSheet('QPushButton {background-color: #54687A}')
+
+    def paste_test(self):
+        self.test_pte.clear()
+        self.test_pte.appendPlainText(pyperclip.paste())
 
 
 
