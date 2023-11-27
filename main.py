@@ -355,7 +355,6 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.correct_code_tv.resizeColumnToContents(0)
 
     def mark_button(self):
-        print(self.current_part)
         if self.current_part is None:
             return
         for button in self.part_buttons:
