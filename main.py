@@ -182,6 +182,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
                 self.part_buttons[i].setVisible(False)
                 self.part_buttons[i].setEnabled(False)
                 self.change_icon(i, False)
+        self.mark_button()
 
     def insert(self):
         s = pyperclip.paste()
@@ -220,6 +221,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         task_id = int(t) - 1
         self.current_part = int(t)
         self.load_task(task_id)
+        self.mark_button()
 
     def clear_task(self):
         self.task = Task()
@@ -352,9 +354,18 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.correct_code_tv.horizontalHeader().setVisible(False)
             self.correct_code_tv.resizeColumnToContents(0)
 
-    def mark_button(self, button_id):
-        pass
-        for i in range(len(self.task.tasks)):
+    def mark_button(self):
+        print(self.current_part)
+        if self.current_part is None:
+            return
+        for button in self.part_buttons:
+            if button.text() == str(self.current_part):
+                print(1)
+                button.setStyleSheet('QPushButton {background-color: #A3C1DA}')
+            else:
+                button.setStyleSheet('QPushButton {background-color: #54687A}')
+
+
 
 
 
