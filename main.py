@@ -352,6 +352,12 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.correct_code_tv.horizontalHeader().setVisible(False)
             self.correct_code_tv.resizeColumnToContents(0)
 
+    def mark_button(self, button_id):
+        pass
+        for i in range(len(self.task.tasks)):
+
+
+
 
 def excepthook(exc_type, exc_value, exc_tb):
     tb = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
