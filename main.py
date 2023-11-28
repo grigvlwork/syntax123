@@ -161,8 +161,6 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.copy_answer_btn.setEnabled(False)
 
     def clear_controls(self):
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/img/check.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         for i in range(1, self.amount_buttons):
             self.change_icon(i, False)
             if i > 0:
@@ -254,6 +252,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         code = self.correct_code_pte.toPlainText()
         timeout = self.timeout_sb.value()
         self.correct_output_lb.setText('Вывод: ' + run_text(remove_comments(code), timeout))
+        os.remove(os.getcwd() + '/' + file_name)
 
     def run_test(self):
         file_names = ['9.txt', '9.csv', '17.txt', '22.txt', '24.txt', '26.txt', '27_A.txt', '27_B.txt']
