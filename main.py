@@ -263,8 +263,11 @@ class MyWidget(QMainWindow, Ui_MainWindow):
                 file_name = file
                 break
         if (self.part_cb.currentText() == 'beta' or
-                self.number_cb.currentText() in ['17', '22', '24']):
+                self.number_cb.currentText() in ['17', '22', '24'] or
+                file_name in ['17.txt', '22.txt', '24.txt']):
             folder = '/files/beta/'
+        elif file_name == '9.csv':
+            folder = '/files/hard/'
         else:
             folder = '/files/' + self.part_cb.currentText() + '/'
         try:
