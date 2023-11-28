@@ -235,28 +235,33 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         file_names = ['9.txt', '9.csv', '17.txt', '22.txt', '24.txt', '26.txt', '27_A.txt', '27_B.txt']
         code = self.correct_code_pte.toPlainText()
         file_name = self.number_cb.currentText() + '.*'
+        use_file = False
         for file in file_names:
             if file in code:
                 file_name = file
+                use_file =True
                 break
         if (self.part_cb.currentText() == 'beta' or
                 self.number_cb.currentText() in ['17', '22', '24']):
             folder = '/files/beta/'
         else:
             folder = '/files/' + self.part_cb.currentText() + '/'
-        try:
-            for file in glob.glob(os.getcwd() + folder + file_name):
-                shutil.copy(file, os.getcwd())
-        except Exception:
-            self.correct_output_lb.setText('Файл не найден')
-            return
+        if use_file:
+            try:
+                for file in glob.glob(os.getcwd() + folder + file_name):
+                    shutil.copy(file, os.getcwd())
+            except Exception:
+                self.correct_output_lb.setText('Файл не найден')
+                return
         code = self.correct_code_pte.toPlainText()
         timeout = self.timeout_sb.value()
         self.correct_output_lb.setText('Вывод: ' + run_text(remove_comments(code), timeout))
-        try:
-            os.remove(os.getcwd() + '/' + file_name)
-        except Exception:
-            pass
+        if use_file:
+            try:
+                for file in glob.glob(os.getcwd() + '/' + file_name):
+                    os.remove(file)
+            except Exception:
+                pass
 
     def run_test(self):
         file_names = ['9.txt', '9.csv', '17.txt', '22.txt', '24.txt', '26.txt', '27_A.txt', '27_B.txt']
