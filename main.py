@@ -172,6 +172,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.my_answer_pte.clear()
         self.teacher_answer_pte.clear()
         self.corrected_cb.setChecked(False)
+        self.copy_answer_btn.setEnabled(False)
 
     def set_controls(self):
         for i in range(10):
@@ -369,10 +370,6 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def paste_test(self):
         self.test_pte.clear()
         self.test_pte.appendPlainText(pyperclip.paste())
-
-
-
-
 
 
 def excepthook(exc_type, exc_value, exc_tb):
