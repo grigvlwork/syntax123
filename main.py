@@ -120,6 +120,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.del_part_btn.clicked.connect(self.del_part)
         self.copy_answer_btn.clicked.connect(self.copy_my_answer)
         self.copy_to_test_btn.clicked.connect(self.copy_to_test)
+        self.copy_to_code_btn.clicked.connect(self.copy_to_code)
         self.correct_tw.currentChanged.connect(self.correct_row_generator)
         self.paste_test_btn.clicked.connect(self.paste_test)
         self.allow_spell_check = check_dict()
@@ -239,7 +240,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         for file in file_names:
             if file in code:
                 file_name = file
-                use_file =True
+                use_file = True
                 break
         if (self.part_cb.currentText() == 'beta' or
                 self.number_cb.currentText() in ['17', '22', '24']):
@@ -267,9 +268,11 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         file_names = ['9.txt', '9.csv', '17.txt', '22.txt', '24.txt', '26.txt', '27_A.txt', '27_B.txt']
         code = self.test_pte.toPlainText()
         file_name = self.number_cb.currentText() + '.*'
+        use_file = False
         for file in file_names:
             if file in code:
                 file_name = file
+                use_file = True
                 break
         if (self.part_cb.currentText() == 'beta' or
                 self.number_cb.currentText() in ['17', '22', '24'] or
@@ -279,15 +282,22 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             folder = '/files/hard/'
         else:
             folder = '/files/' + self.part_cb.currentText() + '/'
-        try:
-            for file in glob.glob(os.getcwd() + folder + file_name):
-                shutil.copy(file, os.getcwd())
-        except Exception:
-            self.output_test_lb.setText('Файл не найден')
-            return
+        if use_file:
+            try:
+                for file in glob.glob(os.getcwd() + folder + file_name):
+                    shutil.copy(file, os.getcwd())
+            except Exception:
+                self.output_test_lb.setText('Файл не найден')
+                return
         code = self.test_pte.toPlainText()
         timeout = self.timeout_test_sb.value()
         self.output_test_lb.setText('Вывод: ' + run_text(remove_comments(code), timeout))
+        if use_file:
+            try:
+                for file in glob.glob(os.getcwd() + '/' + file_name):
+                    os.remove(file)
+            except Exception:
+                pass
 
     def explanation_changed(self):
         if len(self.task.tasks) > 0 and self.current_part is not None:
@@ -358,6 +368,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def copy_to_test(self):
         self.test_pte.clear()
         self.test_pte.appendPlainText(self.correct_code_pte.toPlainText())
+
+    def copy_to_code(self):
+        self.correct_code_pte.clear()
+        self.correct_code_pte.appendPlainText(self.test_pte.toPlainText())
 
     def correct_row_generator(self):
         if self.correct_tw.currentIndex() == 1:
