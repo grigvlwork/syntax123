@@ -13,6 +13,7 @@ class Task:
     def parse(self, text):
         # self.__init__()
         i = 1
+        self.tasks = []
         while f'<code{i}>' in text:
             begin = text.find(f'<code{i}>') + len(f'<code{i}>')
             end = text.find(f'</code{i}>')

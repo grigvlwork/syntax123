@@ -194,13 +194,14 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         t = self.teacher_answer_pte.toPlainText()
         self.explanation_pte.clear()
         self.correct_code_pte.clear()
-        self.my_answer_pte.clear()
         self.corrected_cb.setChecked(False)
         self.copy_answer_btn.setEnabled(False)
         self.task = Task()
         self.task.parse(t)
+        self.current_part = 1
         self.explanation_pte.appendPlainText(self.task.tasks[0].explanation)
         self.correct_code_pte.appendPlainText(self.task.tasks[0].code)
+        self.my_answer_pte.clear()
         self.my_answer_pte.appendPlainText(self.task.get_text())
         self.set_controls()
         # self.create_my_answer
