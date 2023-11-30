@@ -30,15 +30,15 @@ def run_text(text, timeout):
         if completed_process.returncode == 0:
             t = completed_process.stdout
             t = t.encode('cp1251').decode('utf-8')
-            if len(t) > 25:
-                return t[:25] + '..'
+            if len(t) > 50:
+                return t[:50] + '..'
             else:
                 return t
         else:
             t = completed_process.stderr
             t = t.encode('cp1251').decode('utf-8')
             if len(t) > 50:
-                return t[:50] + '\n' + t[50:]
+                return t[:150] + '\n' + t[150:]
             else:
                 return t
     except subprocess.TimeoutExpired:
