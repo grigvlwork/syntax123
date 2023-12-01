@@ -1,0 +1,44 @@
+<code1>
+
+```
+def F(n):
+    if n<= 1:
+        return 0
+    if n > 1 and n % 6 == 0:
+        return n + F(n//6 -2)
+    if n > 1 and n%6!=0:
+        return n + F(n+6)
+print (F(4242))
+```
+
+</code1>
+<explanation1>
+
+В твоей программе ошибка рекурсии. Когда число кратно 6, рекурсия бесконечна, поэтому в некоторых случаях функция не определена, чтобы это учесть исправь так:
+```
+def F(n):
+    if n == None:
+        return None
+    if n <= 1:
+        return 0
+    if n % 6 == 0:
+        t = F(n // 6 - 2)
+        if t is not None:
+            return n + t
+        else:
+            return None
+    else:
+        return None
+
+
+print(F(4242))
+```
+
+</explanation1>
+<comment>
+
+
+
+</comment>
+
+
