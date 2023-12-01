@@ -20,6 +20,7 @@ from PyQt5.QtGui import QStandardItem, QStandardItemModel
 from mainwindow import Ui_MainWindow
 import res_rc
 from classes import Task
+import requests
 
 
 def run_text(text, timeout):
@@ -90,6 +91,7 @@ def check_dict():
         return False
 
 
+
 class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -124,6 +126,25 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.correct_tw.currentChanged.connect(self.correct_row_generator)
         self.paste_test_btn.clicked.connect(self.paste_test)
         self.allow_spell_check = check_dict()
+        self.setWindowTitle(f'Проверка решений с несколькими ответами {self.check_version()}')
+
+    def check_version(self):
+        v = None
+        try:
+            with open('version.txt') as f:
+                v = f.read().strip()
+        except Exception as e:
+            print(str(e))
+        if v is not None:
+            try:
+                r = requests.get('https://github.com/grigvlwork/syntax123/blob/main/version.txt')
+                new_v = r.text[r.text.find("rawLines") + 12:r.text.find("rawLines") + 17]
+                if v != new_v:
+                    message = QMessageBox.information(self,'Информация', f'Вышла новая версия {new_v}\nОбновите программу', QMessageBox.Ok)
+            except Exception as e:
+                print(str(e))
+            return v
+        return ''
 
     def change_theme(self):
         if self.toggle_theme_btn.text() == 'Светлая тема':
