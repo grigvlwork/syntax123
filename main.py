@@ -91,7 +91,6 @@ def check_dict():
         return False
 
 
-
 class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
@@ -140,7 +139,9 @@ class MyWidget(QMainWindow, Ui_MainWindow):
                 r = requests.get('https://github.com/grigvlwork/syntax123/blob/main/version.txt')
                 new_v = r.text[r.text.find("rawLines") + 12:r.text.find("rawLines") + 17]
                 if v != new_v:
-                    message = QMessageBox.information(self,'Информация', f'Вышла новая версия {new_v}\nОбновите программу', QMessageBox.Ok)
+                    QMessageBox.information(self,
+                                            'Информация', f'Вышла новая версия {new_v}\nОбновите программу',
+                                            QMessageBox.Ok)
             except Exception as e:
                 print(str(e))
             return v
