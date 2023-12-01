@@ -1,54 +1,173 @@
 <code1>
 
 ```
-
-Последний код из задания с исправленной ошибкой по комментарию тренера.
-
+r_min = 0
+for R in range(0,500):
+	R = (bin(R)[3:])
+	if R.count('1') % 2:
+		R = R + R[0] + R[1]
+	else:
+		R = R + bin(R % 5)[3:]
+	N = R.replace(R[0],'')
+	if N.lenght == N.lenght-1:
+		N = N.replace(N.lenght,'')
+	if int(R) > 150:
+		if R < r_min:
+			r_min=r
+print(r_min)
 ```
+
 </code1>
 <explanation1>
 
-Объяснение для ученика - как исправить ошибку
+В строке 7 остаток от деления применяется к переменной типа `str`. Сделай преобразование в целое число. Будет так:
+```
+R = R + bin(int(R, 2) % 5)[3:]
 ```
 
-Код в бектиках, если нужен
-
-```
 </explanation1>
 <code2>
 
 ```
-
-Исправленный код! Исправлена одна ошибка, которая объясняется выше.
-
+r_min = 0
+for R in range(0,500):
+	R = (bin(R)[3:])
+	if R.count('1') % 2:
+		R = R + R[0] + R[1]
+	else:
+		R = R + bin(int(R, 2) % 5)[3:]
+	N = R.replace(R[0],'')
+	if N.lenght == N.lenght-1:
+		N = N.replace(N.lenght,'')
+	if int(R) > 150:
+		if R < r_min:
+			r_min=r
+print(r_min)
 ```
+
 </code2>
 <explanation2>
 
-Объяснение для ученика
+В строке 7 появляется ошибка из-за значений в функции `range()` в строке 1. Попробуй изменить начальное значение на 5. Будет так:
+```
+for R in range(5, 500):
 ```
 
-Код в бектиках, если нужен
-
-```
 </explanation2>
 <code3>
 
 ```
-
-Исправленный НОВЫЙ код! Исправлена одна ошибка, которая объясняется выше.
-
+r_min = 0
+for R in range(5, 500):
+	R = (bin(R)[3:])
+	if R.count('1') % 2:
+		R = R + R[0] + R[1]
+	else:
+		R = R + bin(int(R, 2) % 5)[3:]
+	N = R.replace(R[0],'')
+	if N.lenght == N.lenght-1:
+		N = N.replace(N.lenght,'')
+	if int(R) > 150:
+		if R < r_min:
+			r_min=r
+print(r_min)
 ```
+
 </code3>
 <explanation3>
 
-Объяснение для ученика
+Смотри, в строке 9 ты пытаешься сравнить последний символ с предпоследним, на Python это можно сделать так:
+```
+	if N[-1] == N[-2]:
 ```
 
-Код в бектиках, если нужен
-
-```
 </explanation3>
+<code4>
+
+```
+r_min = 0
+for R in range(2, 500):
+	R = (bin(R)[3:])
+	if R.count('1') % 2:
+		R = R + R[0] + R[1]
+	else:
+		R = R + bin(int(R, 2) % 5)[3:]
+	N = R.replace(R[0],'')
+	if N[-1] == N[-2]:
+		N = N.replace(N.lenght,'')
+	if int(R) > 150:
+		if R < r_min:
+			r_min=r
+print(r_min)
+```
+
+</code4>
+<explanation4>
+
+Ошибка с выходом индекса за границы возникает, из-за того, что в предыдущей строке неверно удаляется первый символ строки, попробуй исправить строку 8 так:
+```
+N = R[1:]
+```
+
+</explanation4>
+<code5>
+
+```
+r_min = 0
+for R in range(5, 500):
+	R = (bin(R)[3:])
+	if R.count('1') % 2:
+		R = R + R[0] + R[1]
+	else:
+		R = R + bin(int(R, 2) % 5)[3:]
+	N = R[1:]
+	if N[-1] == N[-2]:
+		N = N.replace(N.lenght,'')
+	if int(R) > 150:
+		if R < r_min:
+			r_min=r
+print(r_min)
+```
+
+</code5>
+<explanation5>
+
+Смотри, в строке 12 ты сравниваешь число и строковое значение, преобразуй переменную `R` к целому типу вот так:
+```
+		if int(R, 2) < r_min:
+```
+
+</explanation5>
+<code6>
+
+```
+r_min = 0
+for R in range(5, 500):
+	R = (bin(R)[3:])
+	if R.count('1') % 2:
+		R = R + R[0] + R[1]
+	else:
+		R = R + bin(int(R, 2) % 5)[3:]
+	N = R[1:]
+	if N[-1] == N[-2]:
+		N = N.replace(N.lenght,'')
+	if int(R) > 150:
+		if int(R, 2) < r_min:
+			r_min=r
+print(r_min)
+```
+
+</code6>
+<explanation6>
+
+Смотри, если в строке 10 ты хотел удалить последний символ строки, это можно сделать так:
+```
+		N = N[:-1]
+```
+
+</explanation6>
 <comment>
-Комментарий к задаче для супертренера
+
+
+
 </comment>
