@@ -347,6 +347,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.part_buttons[self.current_part - 1].setEnabled(True)
         self.correct_code_pte.clear()
         self.explanation_pte.clear()
+        self.mark_button()
 
     def pep8_correct(self):
         self.correct_code_pte.setPlainText(self.correct_code_pte.toPlainText().replace('\t', '    '))
