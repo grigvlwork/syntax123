@@ -330,6 +330,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.task.tasks[self.current_part - 1].explanation = self.explanation_pte.toPlainText()
         self.my_answer_pte.clear()
         self.my_answer_pte.appendPlainText(self.task.get_text())
+        if self.copy_answer_btn.isEnabled():
+            self.copy_answer_btn.setEnabled(False)
+        if self.corrected_cb.isChecked():
+            self.corrected_cb.setChecked(False)
 
     def code_changed(self):
         if len(self.task.tasks) > 0 and self.current_part is not None:
@@ -340,6 +344,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.task.tasks[self.current_part - 1].code = self.correct_code_pte.toPlainText()
         self.my_answer_pte.clear()
         self.my_answer_pte.appendPlainText(self.task.get_text())
+        if self.copy_answer_btn.isEnabled():
+            self.copy_answer_btn.setEnabled(False)
+        if self.corrected_cb.isChecked():
+            self.corrected_cb.setChecked(False)
 
     def add_part(self):
         self.task.add_part()
