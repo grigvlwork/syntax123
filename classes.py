@@ -36,7 +36,10 @@ class Task:
         for i in range(len(self.tasks)):
             text += f'<code{i + 1}>\n\n```\n{self.tasks[i].code.strip()}\n```\n\n</code{i + 1}>' + \
                     f'\n<explanation{i + 1}>\n\n{self.tasks[i].explanation.strip()}\n\n</explanation{i + 1}>\n'
-        text += f'<comment>\n\n{self.comment.strip()}\n\n</comment>'
+        if self.comment.strip() != '':
+            text += f'<comment>\n\n{self.comment.strip()}\n\n</comment>'
+        # else:
+        #     text += '<comment></comment>'
         return text
 
     def del_part(self, part_id):
