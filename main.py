@@ -324,6 +324,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def explanation_changed(self):
         if len(self.task.tasks) > 0 and self.current_part is not None:
             self.task.tasks[self.current_part - 1].explanation = self.explanation_pte.toPlainText()
+            self.task.tasks[self.current_part - 1].checked = False
         else:
             self.task.add_part()
             self.current_part = 1
@@ -334,10 +335,12 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.copy_answer_btn.setEnabled(False)
         if self.corrected_cb.isChecked():
             self.corrected_cb.setChecked(False)
+        self.change_icon(self.current_part, self.corrected_cb.isChecked())
 
     def code_changed(self):
         if len(self.task.tasks) > 0 and self.current_part is not None:
             self.task.tasks[self.current_part - 1].code = self.correct_code_pte.toPlainText()
+            self.task.tasks[self.current_part - 1].checked = False
         else:
             self.task.add_part()
             self.current_part = 1
@@ -348,6 +351,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.copy_answer_btn.setEnabled(False)
         if self.corrected_cb.isChecked():
             self.corrected_cb.setChecked(False)
+        self.change_icon(self.current_part, self.corrected_cb.isChecked())
 
     def add_part(self):
         self.task.add_part()
