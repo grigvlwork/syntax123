@@ -20,6 +20,7 @@ from PyQt5.QtGui import QStandardItem, QStandardItemModel
 from mainwindow import Ui_MainWindow
 import res_rc
 from classes import Task
+import requests
 
 
 def run_text(text, timeout):
@@ -37,10 +38,10 @@ def run_text(text, timeout):
         else:
             t = completed_process.stderr
             t = t.encode('cp1251').decode('utf-8')
-            if len(t) > 50:
-                return t[:150] + '\n' + t[150:]
-            else:
-                return t
+            # if len(t) > 50:
+            #     return t[:150] + '\n' + t[150:]
+            # else:
+            return t
     except subprocess.TimeoutExpired:
         return f'Программа выполнялась более {timeout} секунд'
 
@@ -124,6 +125,27 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.correct_tw.currentChanged.connect(self.correct_row_generator)
         self.paste_test_btn.clicked.connect(self.paste_test)
         self.allow_spell_check = check_dict()
+        self.setWindowTitle(f'Проверка решений с несколькими ответами {self.check_version()}')
+
+    def check_version(self):
+        v = None
+        try:
+            with open('version.txt') as f:
+                v = f.read().strip()
+        except Exception as e:
+            print(str(e))
+        if v is not None:
+            try:
+                r = requests.get('https://github.com/grigvlwork/syntax123/blob/main/version.txt')
+                new_v = r.text[r.text.find("rawLines") + 12:r.text.find("rawLines") + 17]
+                if v != new_v:
+                    QMessageBox.information(self,
+                                            'Информация', f'Вышла новая версия {new_v}\nОбновите программу',
+                                            QMessageBox.Ok)
+            except Exception as e:
+                print(str(e))
+            return v
+        return ''
 
     def change_theme(self):
         if self.toggle_theme_btn.text() == 'Светлая тема':
@@ -308,6 +330,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.task.tasks[self.current_part - 1].explanation = self.explanation_pte.toPlainText()
         self.my_answer_pte.clear()
         self.my_answer_pte.appendPlainText(self.task.get_text())
+        if self.copy_answer_btn.isEnabled():
+            self.copy_answer_btn.setEnabled(False)
+        if self.corrected_cb.isChecked():
+            self.corrected_cb.setChecked(False)
 
     def code_changed(self):
         if len(self.task.tasks) > 0 and self.current_part is not None:
@@ -318,6 +344,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
             self.task.tasks[self.current_part - 1].code = self.correct_code_pte.toPlainText()
         self.my_answer_pte.clear()
         self.my_answer_pte.appendPlainText(self.task.get_text())
+        if self.copy_answer_btn.isEnabled():
+            self.copy_answer_btn.setEnabled(False)
+        if self.corrected_cb.isChecked():
+            self.corrected_cb.setChecked(False)
 
     def add_part(self):
         self.task.add_part()
@@ -326,6 +356,9 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.part_buttons[self.current_part - 1].setEnabled(True)
         self.correct_code_pte.clear()
         self.explanation_pte.clear()
+        self.corrected_cb.setChecked(False)
+        self.copy_answer_btn.setEnabled(False)
+        self.mark_button()
 
     def pep8_correct(self):
         self.correct_code_pte.setPlainText(self.correct_code_pte.toPlainText().replace('\t', '    '))
