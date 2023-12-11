@@ -219,6 +219,8 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.correct_code_pte.clear()
         self.corrected_cb.setChecked(False)
         self.copy_answer_btn.setEnabled(False)
+        self.timeout_sb.setValue(10)
+        self.timeout_test_sb.setValue(10)
         self.task = Task()
         self.task.parse(t)
         self.current_part = 1
@@ -252,6 +254,8 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def clear_task(self):
         self.task = Task()
         self.current_part = None
+        self.timeout_sb.setValue(10)
+        self.timeout_test_sb.setValue(10)
         self.clear_controls()
 
     def run_correct(self):
@@ -452,3 +456,4 @@ if __name__ == '__main__':
     app.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt5', palette=qdarkstyle.DarkPalette))
     ex.show()
     sys.exit(app.exec_())
+
